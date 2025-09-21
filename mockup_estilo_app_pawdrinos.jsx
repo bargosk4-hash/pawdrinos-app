@@ -1,118 +1,407 @@
-import React from "react";
+import React, { useState } from "react";
 
-function App() {
+export default function App() {
+  const [activeTab, setActiveTab] = useState("servicios");
+  const [reservation, setReservation] = useState({
+    sessionId: "1",
+    name: "",
+    email: "",
+    date: "",
+  });
+
+  const sessions = [
+    {
+      id: "1",
+      title: "Yoga suave con perros",
+      description:
+        "Clase enfocada en estiramientos, respiración y juego controlado con perros. Ideal para principiantes.",
+      price: "85.000",
+    },
+    {
+      id: "2",
+      title: "Mindfulness & gatoterapia",
+      description:
+        "Meditación guiada y ejercicios de atención plena acompañados por gatos. Espacio tranquilo y reconfortante.",
+      price: "100.000",
+    },
+    {
+      id: "3",
+      title: "Flow mixto (perros y gatos)",
+      description:
+        "Sesión dinámica de yoga y mindfulness con interacción controlada con perros y gatos. Para quienes buscan más movimiento.",
+      price: "120.000",
+    },
+  ];
+
+  function handleChange(e) {
+    setReservation({ ...reservation, [e.target.name]: e.target.value });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const sel = sessions.find((s) => s.id === reservation.sessionId);
+    alert(
+      `Reserva recibida:\n\nSesión: ${sel.title}\nFecha: ${reservation.date}\nNombre: ${reservation.name}\nEmail: ${reservation.email}\nPrecio: $${sel.price}`
+    );
+    setReservation({ sessionId: "1", name: "", email: "", date: "" });
+  }
+
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>🐾 Pawdrinos</h1>
-      <p style={styles.subtitle}>
-        Clases de yoga y mindfulness con mascotas (perros y gatos).
-      </p>
+      <header style={styles.header}>
+        <div style={styles.logo}>🐾 Pawdrinos</div>
+        <div style={styles.tag}>Yoga y mindfulness con perros y gatos</div>
+      </header>
 
-      {/* Servicios */}
-      <div style={styles.card}>
-        <h2 style={styles.sectionTitle}>Servicios</h2>
-        <ul style={styles.list}>
-          <li>Clases grupales de yoga con perros o gatos</li>
-          <li>Sesiones de mindfulness acompañado de mascotas</li>
-          <li>Lecturas y ejercicios de relajación</li>
-          <li>Actividades adaptadas para niños, jóvenes y adultos</li>
-        </ul>
-      </div>
+      {/* Pestañas */}
+      <nav style={styles.tabs}>
+        <button
+          style={activeTab === "servicios" ? styles.activeTab : styles.tab}
+          onClick={() => setActiveTab("servicios")}
+        >
+          Servicios
+        </button>
+        <button
+          style={activeTab === "beneficios" ? styles.activeTab : styles.tab}
+          onClick={() => setActiveTab("beneficios")}
+        >
+          Beneficios
+        </button>
+        <button
+          style={activeTab === "precios" ? styles.activeTab : styles.tab}
+          onClick={() => setActiveTab("precios")}
+        >
+          Precios
+        </button>
+        <button
+          style={activeTab === "reservar" ? styles.activeTab : styles.tab}
+          onClick={() => setActiveTab("reservar")}
+        >
+          Reservar
+        </button>
+        <button
+          style={activeTab === "galeria" ? styles.activeTab : styles.tab}
+          onClick={() => setActiveTab("galeria")}
+        >
+          Galería
+        </button>
+        <button
+          style={activeTab === "contacto" ? styles.activeTab : styles.tab}
+          onClick={() => setActiveTab("contacto")}
+        >
+          Contacto
+        </button>
+      </nav>
 
-      {/* Beneficios */}
-      <div style={styles.card}>
-        <h2 style={styles.sectionTitle}>Beneficios</h2>
-        <ul style={styles.list}>
-          <li>Disminución del estrés y la ansiedad</li>
-          <li>Mayor motivación y bienestar emocional</li>
-          <li>Fomento de la socialización y creación de comunidad</li>
-          <li>Conexión emocional y acompañamiento</li>
-        </ul>
-      </div>
+      {/* Contenido */}
+      <main style={styles.main}>
+        {activeTab === "servicios" && (
+          <section style={styles.grid}>
+            {sessions.map((s) => (
+              <article key={s.id} style={styles.card}>
+                <div style={styles.cardHeader}>
+                  <h3 style={styles.cardTitle}>{s.title}</h3>
+                  <div style={styles.priceTag}>${s.price}</div>
+                </div>
+                <p style={styles.cardText}>{s.description}</p>
+                <p style={styles.small}>
+                  Duración aprox. 60 min • Cupos limitados
+                </p>
+              </article>
+            ))}
+          </section>
+        )}
 
-      {/* Precios */}
-      <div style={styles.card}>
-        <h2 style={styles.sectionTitle}>Precios</h2>
-        <ul style={styles.list}>
-          <li>Sesión de yoga con mascotas: $85.000</li>
-          <li>Sesión de mindfulness y relajación: $100.000</li>
-          <li>Sesión completa (yoga + mindfulness): $120.000</li>
-        </ul>
-        <button style={styles.button}>Reserva tu sesión</button>
-      </div>
+        {activeTab === "beneficios" && (
+          <section style={styles.card}>
+            <h2 style={styles.sectionTitle}>Beneficios</h2>
+            <ul style={styles.list}>
+              <li>Reduce el estrés y la ansiedad de forma natural.</li>
+              <li>Mejora la concentración y el estado de ánimo.</li>
+              <li>Fomenta la socialización y el sentido de comunidad.</li>
+              <li>
+                Ofrece acompañamiento emocional a través del vínculo con
+                mascotas entrenadas.
+              </li>
+            </ul>
+          </section>
+        )}
 
-      {/* Galería */}
-      <div style={styles.card}>
-        <h2 style={styles.sectionTitle}>Galería</h2>
-        <div style={styles.gallery}>
-          <img
-            src="https://i.ibb.co/3s5K3tN/yoga-perros1.jpg"
-            alt="Yoga con perros"
-            style={styles.image}
-          />
-          <img
-            src="https://i.ibb.co/Yf2qP3f/yoga-perros2.jpg"
-            alt="Yoga con perros"
-            style={styles.image}
-          />
-        </div>
-      </div>
+        {activeTab === "precios" && (
+          <section style={styles.card}>
+            <h2 style={styles.sectionTitle}>Precios por sesión</h2>
+            <ul style={styles.priceList}>
+              {sessions.map((s) => (
+                <li key={s.id} style={styles.priceRow}>
+                  <span>{s.title}</span>
+                  <strong style={styles.priceStrong}>${s.price}</strong>
+                </li>
+              ))}
+            </ul>
+            <p style={{ ...styles.small, marginTop: 10 }}>
+              Todos los precios incluyen guía certificada y acompañamiento de
+              mascotas entrenadas.
+            </p>
+          </section>
+        )}
 
-      {/* Contacto */}
-      <div style={styles.card}>
-        <h2 style={styles.sectionTitle}>Contacto</h2>
-        <p style={styles.contact}>📞 Teléfono: 3014412987</p>
-      </div>
+        {activeTab === "reservar" && (
+          <section style={styles.card}>
+            <h2 style={styles.sectionTitle}>Reservar sesión</h2>
+            <form onSubmit={handleSubmit} style={styles.form}>
+              <label style={styles.label}>
+                Selecciona sesión
+                <select
+                  name="sessionId"
+                  value={reservation.sessionId}
+                  onChange={handleChange}
+                  style={styles.select}
+                >
+                  {sessions.map((s) => (
+                    <option value={s.id} key={s.id}>
+                      {s.title} — ${s.price}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label style={styles.label}>
+                Nombre
+                <input
+                  name="name"
+                  value={reservation.name}
+                  onChange={handleChange}
+                  required
+                  style={styles.input}
+                  placeholder="Tu nombre"
+                />
+              </label>
+
+              <label style={styles.label}>
+                Email
+                <input
+                  name="email"
+                  value={reservation.email}
+                  onChange={handleChange}
+                  type="email"
+                  required
+                  style={styles.input}
+                  placeholder="tu@email.com"
+                />
+              </label>
+
+              <label style={styles.label}>
+                Fecha
+                <input
+                  name="date"
+                  value={reservation.date}
+                  onChange={handleChange}
+                  type="date"
+                  required
+                  style={styles.input}
+                />
+              </label>
+
+              <button type="submit" style={styles.bookButton}>
+                Confirmar reserva
+              </button>
+            </form>
+          </section>
+        )}
+
+        {activeTab === "galeria" && (
+          <section style={styles.card}>
+            <h2 style={styles.sectionTitle}>Galería</h2>
+            <div style={styles.gallery}>
+              <img
+                src="/6a76f3fa-97c4-4d32-84c4-c735dff5f5d0.png"
+                alt="Yoga con mascotas 1"
+                style={styles.image}
+              />
+              <img
+                src="/9222a5f4-a739-45bd-9094-96ac1e60b9fd.png"
+                alt="Yoga con mascotas 2"
+                style={styles.image}
+              />
+            </div>
+          </section>
+        )}
+
+        {activeTab === "contacto" && (
+          <section style={styles.card}>
+            <h2 style={styles.sectionTitle}>Contacto</h2>
+            <p style={styles.contact}>📞 Teléfono: 3014412987</p>
+            <a
+              href="https://wa.me/573014412987?text=Hola!%20Quiero%20reservar%20una%20sesión%20🐾"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={styles.bookButton}
+            >
+              Reserva por WhatsApp
+            </a>
+          </section>
+        )}
+      </main>
+
+      <footer style={styles.footer}>
+        <small>© Pawdrinos — Bienestar con peludos</small>
+      </footer>
     </div>
   );
 }
 
+/* Estilos */
+const mainOrange = "#ff7a18";
+const lightOrangeBG = "#fff4e6";
+
 const styles = {
   container: {
     fontFamily: "Arial, sans-serif",
-    padding: "20px",
-    textAlign: "center",
-    backgroundColor: "#fff3e0", // naranja claro
     minHeight: "100vh",
+    backgroundColor: lightOrangeBG,
+    color: "#222",
+    display: "flex",
+    flexDirection: "column",
   },
-  title: {
-    fontSize: "2.5rem",
-    color: "#e65100", // naranja oscuro
-    marginBottom: "10px",
+  header: {
+    padding: "18px 24px",
+    borderBottom: `1px solid rgba(0,0,0,0.06)`,
   },
-  subtitle: {
-    fontSize: "1.2rem",
-    color: "#555",
-    marginBottom: "20px",
+  logo: {
+    fontSize: "1.4rem",
+    fontWeight: "700",
+    color: mainOrange,
+  },
+  tag: {
+    fontSize: "0.9rem",
+    color: "#444",
+    marginTop: 6,
+  },
+  tabs: {
+    display: "flex",
+    gap: "8px",
+    padding: "14px 24px",
+    justifyContent: "center",
+    flexWrap: "wrap",
+  },
+  tab: {
+    padding: "8px 14px",
+    borderRadius: 8,
+    backgroundColor: "white",
+    border: "1px solid rgba(0,0,0,0.08)",
+    cursor: "pointer",
+  },
+  activeTab: {
+    padding: "8px 14px",
+    borderRadius: 8,
+    backgroundColor: mainOrange,
+    color: "white",
+    border: "none",
+    cursor: "pointer",
+    fontWeight: "600",
+  },
+  main: {
+    padding: "20px",
+    flex: 1,
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+    gap: "16px",
   },
   card: {
     backgroundColor: "white",
-    borderRadius: "12px",
-    padding: "20px",
-    margin: "20px auto",
-    maxWidth: "600px",
-    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-    textAlign: "left",
+    padding: "18px",
+    borderRadius: 12,
+    boxShadow: "0 6px 18px rgba(0,0,0,0.06)",
+  },
+  cardHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  cardTitle: {
+    margin: 0,
+    fontSize: "1.05rem",
+    color: "#222",
+  },
+  priceTag: {
+    backgroundColor: "#fff7f0",
+    color: mainOrange,
+    padding: "6px 10px",
+    borderRadius: 8,
+    fontWeight: "700",
+    border: `1px solid rgba(255,122,24,0.12)`,
+  },
+  cardText: {
+    color: "#444",
+    marginBottom: 8,
+  },
+  small: {
+    color: "#666",
+    fontSize: "0.85rem",
   },
   sectionTitle: {
-    fontSize: "1.5rem",
-    marginBottom: "10px",
-    color: "#e65100",
+    fontSize: "1.2rem",
+    marginBottom: 10,
+    color: "#222",
   },
   list: {
-    fontSize: "1rem",
+    paddingLeft: 18,
     color: "#333",
-    paddingLeft: "20px",
   },
-  button: {
-    backgroundColor: "#ff7043",
-    color: "white",
+  priceList: {
+    listStyle: "none",
+    paddingLeft: 0,
+    margin: 0,
+  },
+  priceRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "8px 0",
+    borderBottom: "1px dashed rgba(0,0,0,0.06)",
+  },
+  priceStrong: {
+    color: mainOrange,
+    fontWeight: 700,
+  },
+  form: {
+    display: "grid",
+    gap: 10,
+    marginTop: 6,
+  },
+  label: {
+    display: "flex",
+    flexDirection: "column",
+    fontSize: "0.9rem",
+    color: "#333",
+  },
+  input: {
+    padding: "8px 10px",
+    borderRadius: 8,
+    border: "1px solid rgba(0,0,0,0.12)",
+    marginTop: 6,
+  },
+  select: {
+    padding: "8px 10px",
+    borderRadius: 8,
+    border: "1px solid rgba(0,0,0,0.12)",
+    marginTop: 6,
+    backgroundColor: "white",
+  },
+  bookButton: {
+    marginTop: 6,
+    padding: "12px 14px",
+    borderRadius: 10,
     border: "none",
-    padding: "12px 20px",
-    borderRadius: "8px",
+    backgroundColor: mainOrange,
+    color: "white",
+    fontWeight: 700,
     cursor: "pointer",
-    fontSize: "1rem",
-    marginTop: "15px",
+    display: "inline-block",
+    textAlign: "center",
+    textDecoration: "none",
   },
   gallery: {
     display: "flex",
@@ -128,8 +417,14 @@ const styles = {
   contact: {
     fontSize: "1.1rem",
     color: "#333",
+    marginBottom: "10px",
+  },
+  footer: {
+    padding: 14,
+    textAlign: "center",
+    borderTop: "1px solid rgba(0,0,0,0.06)",
+    backgroundColor: "transparent",
   },
 };
 
-export default App;
 
